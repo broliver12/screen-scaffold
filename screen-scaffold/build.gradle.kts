@@ -2,17 +2,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.screenshot)
-    `maven-publish`
+    alias(libs.plugins.maven.publish)
 }
 
 android {
     experimentalProperties["android.experimental.enableScreenshotTest"] = true
-
-    publishing{
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
 
     namespace = "com.ostraszynski.screen_scaffold"
     compileSdk {
@@ -37,22 +31,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
-group = "com.ostraszynski"
-version = "0.0.1"
 
-publishing {
-    repositories {
-        mavenLocal()
-    }
-
-    publications {
-        register<MavenPublication>("release") {
-            artifactId = "screen-scaffold"
-            afterEvaluate {
-                from(components["release"])
-            }
-        }
-    }
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
 }
 
 dependencies {
