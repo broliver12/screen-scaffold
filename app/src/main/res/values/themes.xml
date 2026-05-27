@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ScreenScaffoldExample.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/rocket_splash</item>
+        <item name="windowSplashScreenAnimationDuration">500</item>
+        <item name="postSplashScreenTheme">@style/Theme.ScreenScaffoldExample</item>
+    </style>
+
+    <style name="Theme.ScreenScaffoldExample" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
