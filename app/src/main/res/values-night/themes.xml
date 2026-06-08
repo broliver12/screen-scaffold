@@ -2,10 +2,14 @@
 <resources>
     <style name="Theme.ScreenScaffoldExample.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#000000</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/rocket_splash_dark</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/screen_scaffold_example_splash</item>
+
         <item name="windowSplashScreenAnimationDuration">500</item>
         <item name="postSplashScreenTheme">@style/Theme.ScreenScaffoldExample</item>
     </style>
 
-    <style name="Theme.ScreenScaffoldExample" parent="android:ThemeOverlay.Material.Dark" />
+    <style name="Theme.ScreenScaffoldExample" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

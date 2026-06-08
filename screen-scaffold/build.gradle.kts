@@ -45,9 +45,11 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.graphics)
     debugImplementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.material.icons.extended)
 
     testImplementation(libs.junit)
     screenshotTestImplementation(libs.screenshot.validation.api)
     screenshotTestImplementation(libs.androidx.compose.ui.tooling)
     screenshotTestImplementation(libs.androidx.compose.ui.tooling.preview)
+    screenshotTestImplementation(libs.androidx.compose.material.icons.extended)
 }

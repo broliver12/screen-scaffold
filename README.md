@@ -5,6 +5,30 @@
 top content, sticky bottom content, scrollable body content, and sensible system
 bar/IME padding behavior.
 
+<div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px;">
+  <img src="docs/images/scrollable-column.png" alt="Scrollable Column example" height="300" style="height: 300px; width: auto; flex: 0 0 auto;" />
+  <img src="docs/images/scrollable-column-scrolled.png" alt="Scrolled Column example" height="300" style="height: 300px; width: auto; flex: 0 0 auto;" />
+  <img src="docs/images/input-form.png" alt="Input Form example" height="300" style="height: 300px; width: auto; flex: 0 0 auto;" />
+  <img src="docs/images/scrollable-lazy-column.png" alt="Scrollable Lazy Column example" height="300" style="height: 300px; width: auto; flex: 0 0 auto;" />
+</div>
+
+## Deployment Status
+
+[![Maven Central](https://img.shields.io/maven-central/v/com.ostraszynski/screen-scaffold?label=Maven%20Central)](https://central.sonatype.com/artifact/com.ostraszynski/screen-scaffold)
+
+- Status: published to Maven Central
+- Package: [`com.ostraszynski:screen-scaffold`](https://central.sonatype.com/artifact/com.ostraszynski/screen-scaffold)
+- Latest version: shown in the Maven Central badge above
+- License: [Apache License 2.0](LICENSE.md)
+
+Add the dependency with:
+
+```kotlin
+implementation("com.ostraszynski:screen-scaffold:<latest-version>")
+```
+
+## Usage
+
 The scaffold supports:
 
 - optional headers
@@ -16,82 +40,142 @@ The scaffold supports:
 - screens that use a bottom tab/navigation bar instead of a scaffold footer
 - optional Material3 top app bar scroll behavior wiring
 
-## Snapshot Tests
-
-Snapshot coverage is contained in this module under:
-
-`src/screenshotTest/kotlin/com/ostraszynski/screen_scaffold/ScreenContentScaffoldSnapshotTest.kt`
-
-The tests use Android's Compose Preview Screenshot Testing plugin. Each snapshot
-case is a Compose preview marked with `@PreviewTest`, so the test surface is
-generated from previews rather than instrumentation UI tests.
-
-Current cases cover light and dark snapshots for:
-
-- no header and no footer
-- header only
-- footer only
-- header and footer
-- transparent footer
-- lazy column content
-- tab navigation shown with no scaffold footer
-
-Reference images live under:
-
-`src/screenshotTestDebug/reference`
-
-## Adding Screenshot Tests
-
-Add new screenshot tests by creating or updating previews in:
-
-`src/screenshotTest/kotlin/com/ostraszynski/screen_scaffold/ScreenContentScaffoldSnapshotTest.kt`
-
-Each generated screenshot test needs both `@PreviewTest` and a Compose preview
-annotation, usually `@PreviewLightDark`:
+Import the composable:
 
 ```kotlin
-@PreviewTest
-@PreviewLightDark
+import com.ostraszynski.screen_scaffold.ScreenContentScaffold
+```
+
+Use regular `Column` content with optional header and footer slots:
+
+```kotlin
 @Composable
-private fun ScreenContentScaffoldExampleSnapshot() {
+fun DetailsScreen() {
     ScreenContentScaffold(
+        header = {
+            ...
+        },
+        footer = {
+            ...
+        },
         content = {
-            Text("Example")
+            ...
         },
     )
 }
 ```
 
-After adding or changing a preview, generate the reference images:
+Use lazy content when the body is list-based:
 
-```sh
-./gradlew :screen-scaffold:updateDebugScreenshotTest
+```kotlin
+@Composable
+fun FeedScreen(items: List<FeedItem>) {
+    ScreenContentScaffold(
+        lazyColumnContent = {
+            items(items) { item ->
+                ...
+            }
+        },
+    )
+}
 ```
 
-Review the generated PNG files under:
+Pass your own scroll state when another part of the screen needs to observe or
+control scrolling:
 
-`src/screenshotTestDebug/reference`
+```kotlin
+@Composable
+fun ScrollAwareScreen() {
+    val scrollState = rememberScrollState()
 
-Then validate the snapshots before committing:
-
-```sh
-./gradlew :screen-scaffold:validateDebugScreenshotTest
+    ScreenContentScaffold(
+        scrollState = scrollState,
+        content = {
+            ...
+        },
+    )
+}
 ```
 
-## Running Tests
+Use a `LazyListState` with lazy content:
 
-Validate the checked-in reference images:
+```kotlin
+@Composable
+fun StatefulFeedScreen(items: List<FeedItem>) {
+    val listState = rememberLazyListState()
 
-```sh
-./gradlew :screen-scaffold:validateDebugScreenshotTest
+    ScreenContentScaffold(
+        listState = listState,
+        lazyColumnContent = {
+            items(items) { item ->
+                ...
+            }
+        },
+    )
+}
 ```
 
-Update reference images after an intentional UI change:
+Wire Material3 top app bar scroll behavior through the scaffold:
 
-```sh
-./gradlew :screen-scaffold:updateDebugScreenshotTest
+```kotlin
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CollapsingHeaderScreen() {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+    ScreenContentScaffold(
+        scrollBehavior = scrollBehavior,
+        header = {
+            LargeTopAppBar(
+                title = {
+                    ...
+                },
+                scrollBehavior = scrollBehavior,
+            )
+        },
+        content = {
+            ...
+        },
+    )
+}
 ```
 
-The validation report is generated at:
+Add custom body padding, account for a separate bottom tab/navigation bar, or
+apply IME padding at scaffold level:
 
-`build/reports/screenshotTest/preview/debug/index.html`
+```kotlin
+@Composable
+fun FormScreen() {
+    ScreenContentScaffold(
+        contentPadding = PaddingValues(16.dp),
+        tabNavigationBarShown = true,
+        applyImePadding = true,
+        content = {
+            ...
+        },
+    )
+}
+```
+
+Adjust column alignment and arrangement for non-list layouts:
+
+```kotlin
+@Composable
+fun EmptyStateScreen() {
+    ScreenContentScaffold(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        content = {
+            ...
+        },
+    )
+}
+```
+
+## Testing
+
+Testing documentation is available in [TESTING.md](TESTING.md) for maintainers.
+
+## License
+
+Screen Scaffold is available under the [Apache License 2.0](LICENSE.md).
